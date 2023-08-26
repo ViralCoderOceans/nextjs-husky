@@ -7,7 +7,6 @@
     "semi": ["error", "always"],
     "no-multi-spaces": "error",
     "no-multiple-empty-lines": "error",
-    "no-trailing-spaces": "error",
-    "padding-line-between-tags": "error"
+    "no-trailing-spaces": "error"
   }
 }

@@ -7,5 +7,6 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "jsxBracketSameLine": false,
-  "quoteProps": "as-needed"
+  "quoteProps": "as-needed",
+  "singleAttributePerLine": true
 }

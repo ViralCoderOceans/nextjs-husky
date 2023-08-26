@@ -8,5 +8,6 @@
   "bracketSameLine": false,
   "jsxBracketSameLine": false,
   "quoteProps": "as-needed",
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
+  "trimTrailingWhitespace": true
 }

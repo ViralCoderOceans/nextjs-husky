@@ -36,16 +36,25 @@ const columns = [
 ];
 
 const page = () => {
-  const [platforms, setPlatforms] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [open, setOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [newGame, setNewGame] = useState({});
   const [isEdit, setIsEdit] = useState(false);
-  const { allGames, singleGame, addNewGame, updateGame, deleteGame } =
-    useGames();
-  console.log(allGames.loading);
+  const {
+    allGames,
+    singleGame,
+    addNewGame,
+    updateGame,
+    deleteGame,
+    newGame,
+    setNewGame,
+    platforms,
+    setPlatforms,
+    handleChange,
+    handleCheckbox,
+    resetForm,
+  } = useGames();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -56,13 +65,6 @@ const page = () => {
     setPage(0);
   };
 
-  const handleChange = (e) => {
-    setNewGame({
-      ...newGame,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -70,11 +72,6 @@ const page = () => {
   const handleClose = () => {
     setOpen(false);
     resetForm();
-  };
-
-  const resetForm = () => {
-    setNewGame({});
-    setPlatforms([]);
   };
 
   const addGame = async () => {
@@ -110,20 +107,6 @@ const page = () => {
     allGames.refetch();
     setDeleteModal(false);
     resetForm();
-  };
-
-  const handleCheckbox = (e) => {
-    let refArr = platforms;
-    if (refArr.filter((elm) => elm === e.target.value).length) {
-      refArr = refArr.filter((elm) => elm !== e.target.value);
-    } else {
-      refArr.push(e.target.value);
-    }
-    setPlatforms([...refArr]);
-    setNewGame({
-      ...newGame,
-      platform: refArr,
-    });
   };
 
   if (allGames.loading) {

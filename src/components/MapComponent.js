@@ -10,12 +10,14 @@ const MapComponent = () => {
   };
 
   return (
-    <SVGMap
-      map={italy}
-      onLocationClick={onLocationClick}
-      className={styles.svgMap}
-      locationClassName={styles.svgMapLocation}
-    />
+    <>
+      <SVGMap
+        map={italy}
+        onLocationClick={onLocationClick}
+        className={styles.svgMap}
+        locationClassName={styles.svgMapLocation}
+      />
+    </>
   );
 };
 

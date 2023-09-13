@@ -4,6 +4,10 @@ import { BASE_URL } from "../constants/constants";
 
 export const api = create({
   baseURL: BASE_URL,
+  headers: {
+    Authorization: "Bearer helloWorld",
+  },
+  withCredentials: true,
 });
 
 export const ApiErrors = (response, warningDuration = 3) => {

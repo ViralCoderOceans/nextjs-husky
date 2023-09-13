@@ -50,3 +50,57 @@ export const deleteUser = (id) =>
       }
     });
   });
+
+//image-upload-actions
+
+export const getAllImages = () =>
+  new Promise((resolve, reject) => {
+    api.get("files").then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const uploadFile = (file) =>
+  new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append("avatar", file);
+    api
+      .post("files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        if (response.ok) {
+          message.success(response.data.message);
+          resolve();
+        } else {
+          // message.error(response.data.message);
+          ApiErrors(response);
+          reject();
+        }
+      });
+  });
+
+export const downloadFile = (fileName) =>
+  new Promise((resolve, reject) => {
+    api
+      .get(`files/download/${fileName}`, {
+        responseType: "blob",
+      })
+      .then((blob) => {
+        message.success("Download started successfully.");
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      });
+  });

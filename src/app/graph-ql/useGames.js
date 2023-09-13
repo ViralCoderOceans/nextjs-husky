@@ -17,6 +17,7 @@ const useGames = () => {
   const [deleteGame] = useMutation(DELETE_GAMES);
   const [newGame, setNewGame] = useState({});
   const [platforms, setPlatforms] = useState([]);
+  console.log("platforms: ", platforms);
 
   const handleChange = (e) => {
     setNewGame({

@@ -65,10 +65,6 @@ const page = () => {
     setPage(0);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
     resetForm();
@@ -120,10 +116,11 @@ const page = () => {
 
   return (
     <div className="p-6 h-screen">
+      <h1 className="font-bold text-2xl text-center">GraphQL</h1>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Users Data</h1>
         <Button
-          onClick={handleClickOpen}
+          onClick={() => setOpen(true)}
           className="my-4"
           variant="outlined"
         >
@@ -185,7 +182,7 @@ const page = () => {
                           onClick={() => {
                             setIsEdit(true);
                             getGameById(row.id);
-                            handleClickOpen();
+                            setOpen(true);
                           }}
                           variant="outlined"
                           color="success"

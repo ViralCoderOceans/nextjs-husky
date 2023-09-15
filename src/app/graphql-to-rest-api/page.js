@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  createOrUpdateUser,
-  deleteUser,
-  getAllUser,
-} from "../../../services/actions";
-import { Button } from "@mui/material";
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -20,60 +20,44 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import useRestGames from "./useRestGames";
+import {
+  createOrUpdateGame,
+  deleteGame,
+  deleteOneGame,
+  getAllGames,
+} from "../../../services/actions";
 
 const columns = [
-  { id: "userId", label: "Id", minWidth: 170 },
-  { id: "firstName", label: "First Name", minWidth: 100 },
+  { id: "id", label: "Id", minWidth: 170 },
+  { id: "title", label: "Title", minWidth: 100 },
   {
-    id: "lastName",
-    label: "Last Name",
-    minWidth: 170,
-  },
-  {
-    id: "phone",
-    label: "Phone",
-    minWidth: 170,
-    align: "right",
-  },
-  {
-    id: "createdAt",
-    label: "Created At",
-    minWidth: 170,
-    align: "right",
+    id: "platform",
+    label: "Platform",
+    minWidth: 100,
     format: (value) => {
-      const date = new Date(value);
-      const options = {
-        dateStyle: "short",
-        timeStyle: "short",
-      };
-      const formattedDateTime = date.toLocaleString(undefined, options);
-      return formattedDateTime;
-    },
-  },
-  {
-    id: "updatedAt",
-    label: "Updated At",
-    minWidth: 170,
-    align: "right",
-    format: (value) => {
-      const date = new Date(value);
-      const options = {
-        dateStyle: "short",
-        timeStyle: "short",
-      };
-      const formattedDateTime = date.toLocaleString(undefined, options);
-      return formattedDateTime;
+      return value.join(", ");
     },
   },
 ];
 
 const page = () => {
-  const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [open, setOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [newUser, setNewUser] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
+  const {
+    allGames,
+    fetchGames,
+    newGame,
+    setNewGame,
+    platforms,
+    setPlatforms,
+    handleChange,
+    handleCheckbox,
+    resetForm,
+  } = useRestGames();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -84,73 +68,57 @@ const page = () => {
     setPage(0);
   };
 
-  const handleChange = (e) => {
-    setNewUser({
-      ...newUser,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
-    setNewUser({});
+    setIsEdit(false);
+    resetForm();
   };
 
-  const getUser = () => {
-    getAllUser()
-      .then((res) => {
-        setUsers(res.data);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const addUser = () => {
-    createOrUpdateUser(newUser)
-      .then(() => getUser())
-      .catch((err) => console.error(err));
+  const addGame = async () => {
+    createOrUpdateGame({ game: newGame });
+    fetchGames();
+    resetForm();
     handleClose();
   };
 
-  const getById = (id) => {
-    getAllUser(id)
-      .then((res) => {
-        setNewUser(res.data);
-      })
-      .catch((err) => console.error(err));
+  const editGame = async () => {
+    createOrUpdateGame({ game: newGame });
+    fetchGames();
+    resetForm();
+    handleClose();
+  };
+
+  const getGameById = (_id) => {
+    getAllGames(_id).then((res) => {
+      setNewGame(res);
+      setPlatforms(res.platform);
+    });
   };
 
   const deleteCall = () => {
-    deleteUser(newUser.userId)
-      .then(() => {
-        getUser();
-        setDeleteModal(false);
-        setNewUser({});
-      })
-      .catch((err) => console.error(err));
+    deleteGame(newGame.id);
+    fetchGames();
+    setDeleteModal(false);
+    resetForm();
   };
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
 
   return (
     <div className="p-6 h-screen">
-      <h1 className="font-bold text-2xl text-center">User - CRUD - Normal</h1>
+      <h1 className="font-bold text-2xl text-center">GraphQL to Rest API</h1>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Users Data</h1>
         <Button
-          onClick={handleClickOpen}
+          onClick={() => setOpen(true)}
           className="my-4"
           variant="outlined"
         >
           Add User
         </Button>
       </div>
-      {/* <img src="http://localhost:3001/files/images/dp.jpeg" /> */}
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 600 }}>
           <Table
@@ -170,14 +138,14 @@ const page = () => {
                 ))}
                 <TableCell
                   key="action"
-                  align="center"
+                  align="right"
                 >
                   Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
+              {allGames
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
@@ -194,17 +162,19 @@ const page = () => {
                             key={column.id}
                             align={column.align}
                           >
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value ?? "-"}
+                            {column.format ? column.format(value) : value}
                           </TableCell>
                         );
                       })}
-                      <TableCell className="flex justify-center items-center gap-4">
+                      <TableCell
+                        align="right"
+                        className="flex gap-4"
+                      >
                         <Button
                           onClick={() => {
-                            getById(row.userId);
-                            handleClickOpen();
+                            setIsEdit(true);
+                            getGameById(row.id);
+                            setOpen(true);
                           }}
                           variant="outlined"
                           color="success"
@@ -213,7 +183,7 @@ const page = () => {
                         </Button>
                         <Button
                           onClick={() => {
-                            getById(row.userId);
+                            getGameById(row.id);
                             setDeleteModal(true);
                           }}
                           variant="outlined"
@@ -231,7 +201,7 @@ const page = () => {
         <TablePagination
           rowsPerPageOptions={[7, 14]}
           component="div"
-          count={users.length}
+          count={allGames?.length ?? "wait"}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -244,50 +214,90 @@ const page = () => {
       >
         <DialogTitle>Add User</DialogTitle>
         <DialogContent className="w-[500px]">
+          <h1 className="mt-4">Title</h1>
           <TextField
             margin="dense"
-            id="firstName"
-            name="firstName"
-            label="First Name"
-            value={newUser?.firstName}
+            id="title"
+            name="title"
+            value={newGame?.title}
             type="text"
             fullWidth
-            variant="standard"
             onChange={handleChange}
           />
-          <TextField
-            margin="dense"
-            id="lastName"
-            name="lastName"
-            label="Last Name"
-            value={newUser?.lastName}
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            id="phone"
-            name="phone"
-            label="Phone"
-            value={newUser?.phone}
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={handleChange}
-          />
+          <h1 className="mt-4">Platform</h1>
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={handleCheckbox}
+                  checked={
+                    platforms?.filter((elm) => elm === "PS5").length
+                      ? true
+                      : false
+                  }
+                />
+              }
+              label="PS5"
+              value="PS5"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={handleCheckbox}
+                  checked={
+                    platforms?.filter((elm) => elm === "Xbox").length
+                      ? true
+                      : false
+                  }
+                />
+              }
+              label="Xbox"
+              value="Xbox"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={handleCheckbox}
+                  checked={
+                    platforms?.filter((elm) => elm === "Switch").length
+                      ? true
+                      : false
+                  }
+                />
+              }
+              label="Switch"
+              value="Switch"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={handleCheckbox}
+                  checked={
+                    platforms?.filter((elm) => elm === "PC").length
+                      ? true
+                      : false
+                  }
+                />
+              }
+              label="PC"
+              value="PC"
+            />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={addUser}>Add</Button>
+          {!isEdit ? (
+            <Button onClick={addGame}>Add</Button>
+          ) : (
+            <Button onClick={editGame}>Edit</Button>
+          )}
         </DialogActions>
       </Dialog>
       <Dialog
         open={deleteModal}
         onClose={() => {
           setDeleteModal(false);
-          setNewUser({});
+          setNewGame({});
         }}
       >
         <DialogTitle className="text-center">Are you sure?</DialogTitle>
@@ -298,7 +308,7 @@ const page = () => {
           <Button
             onClick={() => {
               setDeleteModal(false);
-              setNewUser({});
+              setNewGame({});
             }}
           >
             Cancel

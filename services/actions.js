@@ -51,7 +51,7 @@ export const deleteUser = (id) =>
     });
   });
 
-//image-upload-actions
+//image upload actions--------------------------------------------------------------------------------------------------------------------
 
 export const getAllImages = () =>
   new Promise((resolve, reject) => {
@@ -103,4 +103,49 @@ export const downloadFile = (fileName) =>
         link.click();
         link.remove();
       });
+  });
+
+//graphql to rest api actions--------------------------------------------------------------------------------------------------------------------
+
+export const getAllGames = (id = "") =>
+  new Promise((resolve, reject) => {
+    api.get(`restApi/v1/games/${id}`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const createOrUpdateGame = (props) =>
+  new Promise((resolve, reject) => {
+    const { id } = props.game;
+
+    const verb = id ? "put" : "post";
+    const url = id ? `restApi/v1/games/${id}` : "restApi/v1/games";
+
+    api[verb](url, JSON.stringify(props)).then((response) => {
+      if (response.ok) {
+        message.success(response.data.message);
+        resolve();
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const deleteGame = (id) =>
+  new Promise((resolve, reject) => {
+    api.delete(`restApi/v1/games/${id}`).then((response) => {
+      if (response.ok) {
+        message.success(response.data.message);
+        resolve();
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
   });

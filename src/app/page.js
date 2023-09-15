@@ -25,6 +25,12 @@ export default function Home() {
         >
           GraphQL
         </div>
+        <div
+          onClick={() => push("/graphql-to-rest-api")}
+          className="bg-zinc-200 px-4 py-2 rounded-md text-2xl font-medium cursor-pointer hover:bg-zinc-300 transition-all"
+        >
+          GraphQL To Rest API
+        </div>
       </div>
     </main>
   );

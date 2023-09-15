@@ -59,6 +59,9 @@ const page = () => {
 
   return (
     <div className="p-6 h-screen">
+      <h1 className="font-bold text-2xl text-center">
+        File - Upload and Download
+      </h1>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Images Data</h1>
       </div>

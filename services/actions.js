@@ -1,5 +1,7 @@
-import { ApiErrors, api } from "./api";
+import { ApiErrors, api, getAccessToken } from "./api";
 import { message } from "antd";
+
+//Normal CRUD actions--------------------------------------------------------------------------------------------------------------------
 
 export const getAllUser = (id = "") =>
   new Promise((resolve, reject) => {
@@ -144,6 +146,85 @@ export const deleteGame = (id) =>
         message.success(response.data.message);
         resolve();
       } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+//Role-base API access actions--------------------------------------------------------------------------------------------------------------------
+
+export const loginUser = (user) =>
+  new Promise((resolve, reject) => {
+    api.get(`login`, user).then((response) => {
+      if (response.ok) {
+        message.success(response.data.data.message);
+        localStorage.setItem("accessToken", response.data.data.accessToken);
+        api.setHeader("Authorization", getAccessToken());
+        resolve(response.data.data);
+      } else {
+        message.error(response.data.data.message);
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const getUserType = () =>
+  new Promise((resolve, reject) => {
+    api.get(`data-table/userType`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        message.error(response.data.data.message);
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const getAllData = (id = "") =>
+  new Promise((resolve, reject) => {
+    api.get(`data-table/${id}`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        message.error(response.data.data.message);
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const createOrUpdateData = (props) =>
+  new Promise((resolve, reject) => {
+    const { userId, ...params } = props;
+    const formData = new FormData();
+    Object.keys(params).forEach((key) => formData.append(key, params[key]));
+
+    const verb = userId ? "put" : "post";
+    const url = userId ? `data-table/${userId}` : "data-table";
+
+    api[verb](url, formData).then((response) => {
+      if (response.ok) {
+        message.success(response.data.data.message);
+        resolve();
+      } else {
+        message.error(response.data.data.message);
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const deleteData = (id) =>
+  new Promise((resolve, reject) => {
+    api.delete(`data-table/${id}`).then((response) => {
+      if (response.ok) {
+        message.success(response.data.data.message);
+        resolve();
+      } else {
+        message.error(response.data.data.message);
         ApiErrors(response);
         reject();
       }

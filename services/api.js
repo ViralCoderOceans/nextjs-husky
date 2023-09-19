@@ -1,13 +1,24 @@
 import { create } from "apisauce";
 import { message } from "antd";
 import { BASE_URL } from "../constants/constants";
+import Cookies from "js-cookie";
+
+export const getAccessToken = () => {
+  var token = Cookies.get("accessToken");
+  if (token) {
+    const accessToken = `Bearer ${token}`;
+    return accessToken;
+  }
+  return false;
+};
 
 export const api = create({
   baseURL: BASE_URL,
-  headers: {
-    Authorization: "Bearer helloWorld",
-  },
   withCredentials: true,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Authorization: getAccessToken(),
+  },
 });
 
 export const ApiErrors = (response, warningDuration = 3) => {

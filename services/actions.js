@@ -255,3 +255,28 @@ export const logout = () =>
       }
     });
   });
+
+export const getGithubUser = (id) =>
+  new Promise((resolve, reject) => {
+    api.get(`githubLogin/userData/${id}`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const logoutGithub = () =>
+  new Promise((resolve, reject) => {
+    api.post("githubLogin/logout").then((response) => {
+      if (response.ok) {
+        message.success(response.data.data.message);
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });

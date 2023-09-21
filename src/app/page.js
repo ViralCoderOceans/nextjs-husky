@@ -43,6 +43,11 @@ export default function Home() {
             Sign in with Google
           </div>
         </a>
+        <a href={`${BASE_URL}githubLogin/login`}>
+          <div className="bg-black px-4 py-2 rounded-md text-2xl text-white font-medium cursor-pointer hover:bg-gray-900 transition-all">
+            Sign in with Github
+          </div>
+        </a>
       </div>
     </main>
   );

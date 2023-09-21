@@ -230,3 +230,28 @@ export const deleteData = (id) =>
       }
     });
   });
+
+export const getUserDetails = (id) =>
+  new Promise((resolve, reject) => {
+    api.get(`googleLogin/userData/${id}`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });
+
+export const logout = () =>
+  new Promise((resolve, reject) => {
+    api.post("googleLogin/logout").then((response) => {
+      if (response.ok) {
+        message.success(response.data.data.message);
+        resolve(response.data.data);
+      } else {
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });

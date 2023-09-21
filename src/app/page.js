@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { BASE_URL } from "../../constants/constants";
 
 export default function Home() {
   const { push } = useRouter();
@@ -37,6 +38,11 @@ export default function Home() {
         >
           Role-base API access
         </div>
+        <a href={`${BASE_URL}googleLogin/login`}>
+          <div className="bg-blue-500 px-4 py-2 rounded-md text-2xl text-white font-medium cursor-pointer hover:bg-blue-600 transition-all">
+            Sign in with Google
+          </div>
+        </a>
       </div>
     </main>
   );

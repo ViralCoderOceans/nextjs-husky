@@ -231,6 +231,8 @@ export const deleteData = (id) =>
     });
   });
 
+//Login-actions------------------------------------------------------------------------------------------------------------------------------------
+
 export const getUserDetails = (id) =>
   new Promise((resolve, reject) => {
     api.get(`googleLogin/userData/${id}`).then((response) => {
@@ -258,7 +260,7 @@ export const logout = () =>
 
 export const getGithubUser = (id) =>
   new Promise((resolve, reject) => {
-    api.get(`githubLogin/userData/${id}`).then((response) => {
+    api.get(`oauth2Login/userData/${id}`).then((response) => {
       if (response.ok) {
         resolve(response.data.data);
       } else {
@@ -270,7 +272,7 @@ export const getGithubUser = (id) =>
 
 export const logoutGithub = () =>
   new Promise((resolve, reject) => {
-    api.post("githubLogin/logout").then((response) => {
+    api.post("oauth2Login/logout").then((response) => {
       if (response.ok) {
         message.success(response.data.data.message);
         resolve(response.data.data);

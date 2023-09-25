@@ -282,3 +282,20 @@ export const logoutGithub = () =>
       }
     });
   });
+
+//UNI------------------------------------------------------------------------------------------------------------------------------------
+
+export const getUniLocatedAtRegion = (region) =>
+  new Promise((resolve, reject) => {
+    api
+      .get("university/locatedAtRegion", { region: region })
+      .then((response) => {
+        if (response.ok) {
+          resolve(response.data.data);
+        } else {
+          // message.error(response.data.data.message);
+          ApiErrors(response);
+          reject();
+        }
+      });
+  });

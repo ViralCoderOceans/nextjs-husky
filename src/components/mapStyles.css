@@ -22,12 +22,12 @@
 }
 
 .svg-map__location {
-  fill: #ed4a3c;
+  fill: #de2626;
   cursor: pointer;
 }
 
 .svg-map__location:focus,
 .svg-map__location:hover {
-  fill: #005eff;
+  fill: #009c08;
   outline: 0;
 }

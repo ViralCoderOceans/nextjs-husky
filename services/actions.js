@@ -299,3 +299,16 @@ export const getUniLocatedAtRegion = (region) =>
         }
       });
   });
+
+export const getUniById = (id) =>
+  new Promise((resolve, reject) => {
+    api.get(`university/${id}`).then((response) => {
+      if (response.ok) {
+        resolve(response.data.data);
+      } else {
+        // message.error(response.data.data.message);
+        ApiErrors(response);
+        reject();
+      }
+    });
+  });

@@ -1,13 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { getUniLocatedAtRegion } from "../../../services/actions";
 import SvgComponent from "@/components/SVGComponent";
+import { useRouter } from "next/navigation";
+import {
+  Button,
+  ButtonGroup,
+  Tooltip,
+  styled,
+  tooltipClasses,
+} from "@mui/material";
 
 const svgUrl = "your-svg-file.svg";
 
 const page = () => {
+  const { push } = useRouter();
   const [selectedUniversities, setSelectedUniversities] = useState([]);
   const [selectedRegionName, setSelectedRegionName] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -21,49 +29,101 @@ const page = () => {
     });
   };
 
+  const LightTooltip = styled(({ className, ...props }) => (
+    <Tooltip
+      {...props}
+      classes={{ popper: className }}
+    />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: "rgba(0, 0, 0, 0.87)",
+      boxShadow: theme.shadows[1],
+      fontSize: 16,
+    },
+  }));
+
   return (
-    <div className="flex flex-col ">
-      <h1 className="font-bold text-2xl text-center my-6">
-        Search by clicking Region
-      </h1>
+    <div className="flex flex-col lg:h-screen">
+      <h1 className="font-bold text-2xl text-center my-6">Header</h1>
       <hr className="border border-black" />
-      <div className="flex justify-between my-6 w-full">
-        <div className="px-6 w-[50%]">
+      <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-2 my-6 h-[calc(100%-32px)] overflow-hidden w-full">
+        <div className="h-full lg:px-6 w-[90%] lg:w-[50%]">
+          <h1 className="font-semibold text-2xl text-center my-6">
+            Map of Italy
+          </h1>
           <SvgComponent
             handleClick={handleClick}
             region={selectedRegionName}
           />
         </div>
-        <div className="bg-slate-100 mx-6 rounded-lg h-full w-[50%]">
-          {isLoading ? (
+        <div className="bg-slate-100 mx-6 h-full rounded-lg w-[90%] lg:w-[50%]">
+          {!selectedRegionName ? (
+            <div className="h-full w-full flex justify-center items-center px-4">
+              <div className="flex flex-col justify-center items-center">
+                <h1 className="font-semibold text-2xl text-center my-6">
+                  Please select region on map.
+                </h1>
+                <h1 className="font-semibold text-2xl text-center my-6">
+                  It will show Universities located to your selected Region.
+                </h1>
+              </div>
+            </div>
+          ) : isLoading ? (
             <h1 className="font-semibold text-2xl text-center my-6">
               Loading...
             </h1>
           ) : selectedUniversities.length ? (
-            <div className="h-full overflow-hidden">
-              <h1 className="font-semibold text-2xl text-center my-6">
+            <div className="h-full">
+              <h1 className="font-semibold text-2xl text-center my-6 mb-4">
                 University located at {selectedRegionName}
               </h1>
-              <div className="overflow-y-auto">
-                {selectedUniversities.map((elm) => (
-                  <div className="bg-white p-4 m-4 rounded-lg border border-black">
-                    <div className="flex justify-between items-center gap-2">
-                      <div>
-                        <h1 className="font-semibold text-xl">
-                          {elm.uni_name}
-                        </h1>
-                        <h1 className="font-normal text-xl">Location: -</h1>
+              <div className="h-full overflow-y-auto">
+                <div className="h-full">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-6 p-2 lg:p-6 pt-0 overflow-y-auto">
+                    {selectedUniversities.map((elm) => (
+                      <div
+                        onClick={() => push(`university/${elm._id}`)}
+                        className="rounded-lg overflow-hidden border border-black bg-white cursor-pointer"
+                      >
+                        <div
+                          className="h-[120px] bg-cover"
+                          style={{
+                            backgroundImage: 'url("university_image.jpeg")',
+                          }}
+                        />
+                        <div class="w-full p-2 flex flex-col justify-between items-center border-t border-black">
+                          {elm.uni_name.length > 20 ? (
+                            <LightTooltip
+                              title={elm.uni_name}
+                              placement="top-start"
+                            >
+                              <h1 className="w-full font-medium text-base lg:text-lg py-2 truncate">
+                                {elm.uni_name}
+                              </h1>
+                            </LightTooltip>
+                          ) : (
+                            <h1 className="w-full font-medium text-base lg:text-lg py-2 truncate">
+                              {elm.uni_name}
+                            </h1>
+                          )}
+                          <hr className="w-full my-2 bg-gradient-to-r from-white via-black to-white h-[1.5px] border-0" />
+                        </div>
+                        <div className="w-full flex justify-end">
+                          <button className="m-2 p-1 px-2 bg-slate-200 rounded-md text-sm lg:text-lg font-medium hover:bg-black hover:text-white transition-all">
+                            Explore more
+                          </button>
+                        </div>
                       </div>
-                      <Button variant="outlined">Website</Button>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           ) : (
             <>
               <h1 className="font-semibold text-2xl text-center my-6">
-                No University found, Please select region
+                No University found, Please select another region.
               </h1>
             </>
           )}

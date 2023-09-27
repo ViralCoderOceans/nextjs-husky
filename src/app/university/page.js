@@ -21,9 +21,9 @@ const page = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = (name) => {
+    setSelectedRegionName(name);
     setIsLoading(true);
     getUniLocatedAtRegion(name).then((res) => {
-      setSelectedRegionName(name);
       setSelectedUniversities(res.universities);
       setIsLoading(false);
     });
@@ -57,7 +57,7 @@ const page = () => {
             region={selectedRegionName}
           />
         </div>
-        <div className="bg-slate-100 mx-6 h-full rounded-lg w-[90%] lg:w-[50%]">
+        <div className="bg-zinc-100 mx-6 h-full rounded-lg w-[90%] lg:w-[50%]">
           {!selectedRegionName ? (
             <div className="h-full w-full flex justify-center items-center px-4">
               <div className="flex flex-col justify-center items-center">
@@ -74,17 +74,17 @@ const page = () => {
               Loading...
             </h1>
           ) : selectedUniversities.length ? (
-            <div className="h-full">
+            <div className="h-[calc(100%-72px)]">
               <h1 className="font-semibold text-2xl text-center my-6 mb-4">
                 University located at {selectedRegionName}
               </h1>
               <div className="h-full overflow-y-auto">
                 <div className="h-full">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-6 p-2 lg:p-6 pt-0 overflow-y-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 p-2 lg:p-6 pt-0 overflow-y-auto">
                     {selectedUniversities.map((elm) => (
                       <div
                         onClick={() => push(`university/${elm._id}`)}
-                        className="rounded-lg overflow-hidden border border-black bg-white cursor-pointer"
+                        className="rounded-lg overflow-hidden bg-white cursor-pointer shadow-md hover:shadow-xl select-none"
                       >
                         <div
                           className="h-[120px] bg-cover"
@@ -97,20 +97,21 @@ const page = () => {
                             <LightTooltip
                               title={elm.uni_name}
                               placement="top-start"
+                              className="hidden lg:block"
                             >
-                              <h1 className="w-full font-medium text-base lg:text-lg py-2 truncate">
+                              <h1 className="w-full font-medium text-sm lg:text-base py-2 truncate">
                                 {elm.uni_name}
                               </h1>
                             </LightTooltip>
                           ) : (
-                            <h1 className="w-full font-medium text-base lg:text-lg py-2 truncate">
+                            <h1 className="w-full font-medium text-sm lg:text-base py-2 truncate">
                               {elm.uni_name}
                             </h1>
                           )}
                           <hr className="w-full my-2 bg-gradient-to-r from-white via-black to-white h-[1.5px] border-0" />
                         </div>
                         <div className="w-full flex justify-end">
-                          <button className="m-2 p-1 px-2 bg-slate-200 rounded-md text-sm lg:text-lg font-medium hover:bg-black hover:text-white transition-all">
+                          <button className="m-2 p-1 px-3 bg-zinc-200 rounded-md text-sm lg:text-sm font-normal hover:bg-zinc-800 hover:text-white transition-all">
                             Explore more
                           </button>
                         </div>

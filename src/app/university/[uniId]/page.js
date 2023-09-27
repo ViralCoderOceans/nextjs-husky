@@ -26,7 +26,7 @@ const page = () => {
           <>
             <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-2 lg:gap-8 my-6 w-full">
               <div className="w-full lg:w-[50%]">
-                <div className="bg-slate-200 h-[200px] md:h-[300px] lg:h-[400px] rounded-lg flex justify-center items-center">
+                <div className="bg-zinc-200 h-[200px] md:h-[300px] lg:h-[400px] rounded-lg flex justify-center items-center">
                   <h1 className="font-semibold text-2xl my-6">Uni. Image</h1>
                 </div>
               </div>
@@ -52,7 +52,7 @@ const page = () => {
                 </div>
                 <Link
                   href={university.uni_link}
-                  className="p-2 px-8 bg-slate-200 rounded-md text-xl text-center font-semibold hover:bg-black hover:text-white transition-all"
+                  className="p-2 px-8 bg-zinc-200 rounded-md text-xl text-center font-semibold hover:bg-black hover:text-white transition-all"
                   target="_blank"
                 >
                   Visit Website
@@ -78,13 +78,13 @@ const page = () => {
               </h1>
               <hr className="mb-6 bg-gradient-to-r from-white via-black to-white h-[2px] border-0" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-slate-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
+                <div className="bg-zinc-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
                   <h1 className="font-semibold text-2xl my-6">Uni. Image</h1>
                 </div>
-                <div className="bg-slate-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
+                <div className="bg-zinc-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
                   <h1 className="font-semibold text-2xl my-6">Uni. Image</h1>
                 </div>
-                <div className="bg-slate-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
+                <div className="bg-zinc-200 h-[200px] md:h-[300px] rounded-lg flex justify-center items-center">
                   <h1 className="font-semibold text-2xl my-6">Uni. Image</h1>
                 </div>
               </div>
